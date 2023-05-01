@@ -2,36 +2,24 @@ import java.util.Scanner;
 
 public class BullsAndCows {
     public static void main(String[] args) {
-//        Scanner sc = new Scanner(System.in);
-//        int bulls = 0;
-//        int cows = 0;
-//        String secretCode = "9305";
-//        String str = sc.nextLine();
-//
-//        for (int i = 0; i < str.length(); i++) {
-//            char strDigit = str.charAt(i);
-//            char secretCodeDigit = secretCode.charAt(i);
-//            if (strDigit == secretCodeDigit) {
-//                bulls++;
-//            } else if (secretCode.indexOf(strDigit) != -1) {
-//                cows++;
-//            }
-//        }
-//
-//        if (bulls > 0 || cows > 0) {
-//            String result = String.format("Grade: %d bull(s) and %d cow(s). The secret code is %s.", bulls, cows,
-//                    secretCode);
-//            System.out.println(result);
-//        } else if (cows == 0) {
-//            String result = String.format("Grade: %d bull(s). The secret code is %s.", bulls, secretCode);
-//            System.out.println(result);
-//        } else if (bulls == 0) {
-//            String result = String.format("Grade: %d cows(s). The secret code is %s.", cows, secretCode);
-//            System.out.println(result);
-//        } else {
-//            System.out.println("Grade: None. The secret code is 9305.");
-//        }
-        generatePassword();
+        playGame();
+    }
+
+    public static void playGame() {
+        System.out.println("Please, enter the secret code's length:");
+        Scanner sc = new Scanner(System.in);
+        int length = sc.nextInt();
+        String password = generatePassword(length);
+        System.out.println("Okay, let's start a game!");
+        String inputCode = sc.nextLine();
+        int counter = 1;
+
+        while (!inputCode.equals(password)) {
+            System.out.printf("Turn %d:\n", counter);
+            inputCode = sc.nextLine();
+            checkBullsAndCows(password, inputCode, length);
+            counter++;
+        }
     }
 
     public static StringBuilder generate(int length) {
@@ -50,9 +38,7 @@ public class BullsAndCows {
         return str.chars().distinct().count() == str.length();
     }
 
-    public static void generatePassword() {
-        Scanner sc = new Scanner(System.in);
-        int len = sc.nextInt();
+    public static String generatePassword(int len) {
         StringBuilder password = new StringBuilder(generate(len));
 
         if (len > 10) {
@@ -62,6 +48,41 @@ public class BullsAndCows {
                 password = generate(len);
             }
             System.out.printf("The random secret number is %d.", Long.parseLong(password.toString()));
+        }
+        return password.toString();
+    }
+
+    public static void checkBullsAndCows(String secretCode, String userInputCode, int len) {
+        int bulls = 0;
+        int cows = 0;
+
+        for (int i = 0; i < userInputCode.length(); i++) {
+            char strDigit = userInputCode.charAt(i);
+            char secretCodeDigit = secretCode.charAt(i);
+            if (strDigit == secretCodeDigit) {
+                bulls++;
+            } else if (secretCode.indexOf(strDigit) != -1) {
+                cows++;
+            }
+        }
+
+        if (bulls > 0 && bulls < len || cows > 0) {
+            String result = String.format("Grade: %d bull(s) and %d cow(s). The secret code is %s.", bulls, cows,
+                    secretCode);
+            System.out.println(result);
+        } else if (cows == 0 && bulls < len) {
+            String result = String.format("Grade: %d bull(s). The secret code is %s.", bulls, secretCode);
+            System.out.println(result);
+        } else if (bulls == 0) {
+            String result = String.format("Grade: %d cows(s). The secret code is %s.", cows, secretCode);
+            System.out.println(result);
+        } else if (bulls == len) {
+            String result = String.format("Grade: %s bulls", bulls);
+            System.out.println(result);
+            System.out.println("Congratulations! You guessed the secret code.");
+        } else {
+            String result = String.format("Grade: None. The secret code is %s.", secretCode);
+            System.out.println(result);
         }
     }
 }
