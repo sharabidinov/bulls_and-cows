@@ -24,11 +24,14 @@ public class BullsAndCows {
 
     public static StringBuilder generate(int length) {
         StringBuilder password = new StringBuilder();
-        long randomNum = System.nanoTime();
-        while (length != 0) {
-            password.append(randomNum % 10);
-            randomNum /= 10;
-            length--;
+//        long randomNum = System.nanoTime();
+//        while (length != 0) {
+//            password.append(randomNum % 10);
+//            randomNum /= 10;
+//            length--;
+//        }
+        for (int i = 0; i < length; i++) {
+            password.append((int) (Math.random() * 10));
         }
         return password;
     }
