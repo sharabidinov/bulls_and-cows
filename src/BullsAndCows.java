@@ -9,7 +9,9 @@ public class BullsAndCows {
         System.out.println("Please, enter the secret code's length:");
         Scanner sc = new Scanner(System.in);
         int length = sc.nextInt();
-        String password = generatePassword(length);
+        System.out.println("Input the number of possible symbols in the code");
+        int symbolLength = sc.nextInt();
+        String password = generatePassword(length, symbolLength);
         System.out.println("Okay, let's start a game!");
         String inputCode = sc.nextLine();
         int counter = 1;
@@ -22,8 +24,9 @@ public class BullsAndCows {
         }
     }
 
-    public static StringBuilder generate(int length) {
+    public static StringBuilder generate(int length, int symbolLength) {
         StringBuilder password = new StringBuilder();
+        String POSSIBLE_SYMBOLS = "0123456789abcdefghijklmnopqrstuvwxyz";
 //        long randomNum = System.nanoTime();
 //        while (length != 0) {
 //            password.append(randomNum % 10);
@@ -31,7 +34,7 @@ public class BullsAndCows {
 //            length--;
 //        }
         for (int i = 0; i < length; i++) {
-            password.append((int) (Math.random() * 10));
+            password.append(POSSIBLE_SYMBOLS.charAt((int) (Math.random() * symbolLength)));
         }
         return password;
     }
@@ -41,16 +44,16 @@ public class BullsAndCows {
         return str.chars().distinct().count() == str.length();
     }
 
-    public static String generatePassword(int len) {
-        StringBuilder password = new StringBuilder(generate(len));
+    public static String generatePassword(int len, int symbolLen) {
+        StringBuilder password = new StringBuilder(generate(len, symbolLen));
 
-        if (len > 10) {
+        if (len > 36) {
             System.out.println("Error: can't generate a secret number with a length of 11 because there aren't enough unique digits.");
         } else {
             while (!isUnique(password)) {
-                password = generate(len);
+                password = generate(len, symbolLen);
             }
-            System.out.printf("The random secret number is %d.", Long.parseLong(password.toString()));
+            System.out.printf("The random secret number is %s.\n", password);
         }
         return password.toString();
     }
